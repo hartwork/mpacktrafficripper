@@ -228,7 +228,7 @@ int main(int argc, char ** argv) {
 					}
 					pthread_mutex_unlock(&max_fd_mutex);
 				} else {
-					fprintf(stderr, "[X]   ERROR: Failed to grab file \"%s\", error %d\n", target, errno);
+					fprintf(stderr, "[X] ERROR: Failed to grab file \"%s\", error %d\n", target, errno);
 				}
 
 				free(target);
