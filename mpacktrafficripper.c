@@ -37,12 +37,20 @@ struct thread_data {
 static pthread_mutex_t max_fd_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
+static bool has_trailing_slash(const char * dirname) {
+	assert(dirname);
+	size_t len_dirname = strlen(dirname);
+	assert(len_dirname > 0);
+	return (dirname[len_dirname - 1] == '/');
+}
+
+
 static char * malloc_concat_dirname_basename(
 		const char * dirname, const char * basename) {
 	assert(dirname && basename);
 	size_t len_dirname = strlen(dirname);
 	assert(len_dirname > 0);
-	const bool trailing_slash = (dirname[len_dirname - 1] == '/');
+	const bool trailing_slash = has_trailing_slash(dirname);
 	const size_t len_basename = strlen(basename);
 	const size_t len_res = len_dirname + (trailing_slash ? 0 : 1) + len_basename;
 	char * const res = malloc(len_res + 1);
@@ -65,8 +73,9 @@ void ripp_file(int input_fd, char * buffer, size_t buffer_size, const char * mai
 
 	char filename[PATH_MAX];
 
-	const int len_copied = snprintf(filename, PATH_MAX, "%s/mpack-%ld-%ld.eml",
-			mails_outdir, (long)ts.tv_sec, ts.tv_nsec);
+	const bool trailing_slash = has_trailing_slash(mails_outdir);
+	const int len_copied = snprintf(filename, PATH_MAX, "%s%smpack-%ld-%ld.eml",
+			mails_outdir, trailing_slash ? "" : "/", (long)ts.tv_sec, ts.tv_nsec);
 	if ((len_copied < 0) || (len_copied > PATH_MAX - 1)) {
 		fprintf(stderr, "[%d]   ERROR: Could not make file name, error %d.\n", input_fd, errno);
 		return;
