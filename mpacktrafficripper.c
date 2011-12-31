@@ -3,7 +3,7 @@
 ** Licensed under GPL v3 or later
 */
 #define PACKAGE_NAME     "mpack traffic ripper"
-#define PACKAGE_VERSION  "2011.12.15.02.45"
+#define PACKAGE_VERSION  "2011.12.31.19.27"
 
 #define _GNU_SOURCE
 
